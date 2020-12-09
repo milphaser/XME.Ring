@@ -1,2 +1,0 @@
-Article: Distributed Ring-based Mutual Exclusion with Failure Recovery
-https://dl.acm.org/citation.cfm?doid=3407982.3408014
