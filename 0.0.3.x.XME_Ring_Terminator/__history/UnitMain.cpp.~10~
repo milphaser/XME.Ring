@@ -1,0 +1,71 @@
+//---------------------------------------------------------------------------
+
+#include <windows.h>
+#include <iostream>
+#include <tlhelp32.h>
+
+#pragma hdrstop
+#pragma argsused
+
+#ifdef _WIN32
+#include <tchar.h>
+#else
+  typedef char _TCHAR;
+  #define _tmain main
+#endif
+
+//---------------------------------------------------------------------------
+#include "UnitMain.h"
+//---------------------------------------------------------------------------
+using namespace std;
+//---------------------------------------------------------------------------
+int _tmain(int argc, _TCHAR* argv[])
+{
+	cout << "Hello Termination" << endl;
+
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+	int intTerminated = 0;
+	int intNotTerminated = 0;
+
+	if(Process32First(snapshot, &entry) == TRUE)
+	{
+		while(Process32Next(snapshot, &entry) == TRUE)
+		{
+			int intConsecutiveNumber = 0;
+
+			if(stricmp(entry.szExeFile, "XME_Ring.exe") == 0)
+			{
+				intConsecutiveNumber++;
+				cout << "#" << intConsecutiveNumber << endl; //<< " termination..." << endl;
+
+				HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+
+				TerminateProcess(hProcess, 0);
+				DWORD dwResult = WaitForSingleObject(hProcess, 10000);
+				if(dwResult == WAIT_OBJECT_0)
+				{
+					intTerminated++;
+					cout << "#" << intConsecutiveNumber << " terminated" << endl << endl;
+				}
+				else
+				{
+					intNotTerminated++;
+				}
+
+				CloseHandle(hProcess);
+			}
+		}
+	}
+
+	CloseHandle(snapshot);
+
+	cout << "Terminated/Not terminated: " << intTerminated << "/" << intNotTerminated << endl;
+
+	system("pause");
+	return 0;
+}
+//---------------------------------------------------------------------------
+//#pragma package(smart_init)
