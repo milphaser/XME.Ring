@@ -1,0 +1,108 @@
+*********************************************************************************
+LIST OF PROJECTS/REVISION HISTORY
+*********************************************************************************
+<<< DIFFICULTIES >>>
+
+1. Maintain a single token message.
+2. Minimum preliminary information available to each system process.
+3. Restoration should not require a restart of all system processes, but only of the failed one. 
+4. The normal functioning of the faultless processes is performed simultaneously with the recovery procedure itself.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<<< Working Schemes Flow of Evolution >>>
+
+Scheme 1. Failure Recovery without reconfiguration
+  Assumes that no any changes in system configuration are made. 
+  After the faulty process is restored, all other processes should resume normal operation 
+  from the state they were in at the time of failure and the ME token is restored. 
+  In doing so, strict compliance with the ME1 and ME2 requirements is ensured. 
+  This modified distributed ring-based mutual exclusion algorithm without communication ring 
+  reconfiguration designated as Mx1ME allows distributed system recovery from multiple faults.
+
+Scheme 2. Failure Recovery with one-way reconfiguration
+  Supposes exclusion of the faulty processes from system configuration 
+  and hence leads to system graceful degradation., i.e. "Ring Shrinking". 
+  Such a working scheme is appropriate in the case of absence of spare processes. 
+
+Scheme 3. Falure Recovery with two-way reconfiguration
+  Supposes both exclusion of the faulty processes and inclusion (injection) of faultless spare processes
+  as replacement of faulty ones. It is possible as well to "stretch the ring" by adding new processes in it. 
+  So the communication ring acquires the property of elasticity.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Each project has one of the next type of status:
+	Idea
+	Under development
+	Uncompleted
+	Completed
+*********************************************************************************
+1.0.4.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	1.0.4.x.XTerminator
+Description
+	Process Terminator
+	(Refactored 0.0.3.x.XME_Ring_Terminator)
+
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.1.1.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.1.1.x.XME.GD.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 1
+	(Refactored Project 3.1.1.x.XME.Ring)
+
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.2.1.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.2.1.x.XME.GD.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 1
+	(Refactored Project 4.1.1.x.XME.GD.Ring)
+
+	class PID
+	evolved INI file (Next* segment)
+	
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.3.1.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.3.1.x.XME.GD.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 1
+	(Evolved Project 4.2.1.x.XME.GD.Ring)
+
+	evolved INI file
+	AutoList := false
+	ListPIds implemented as FIFO queue
+	
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.3.2.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.3.2.x.XME.GD.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 2.1
+	(Evolved Project 4.3.1.x.XME.GD.Ring)
+	
+	formMain->labelCurrentScale
+	formMain->stNext
+
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.4.3.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.4.3.x.XME.INJ.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 2.2
+	(Evolved Project 4.3.2.x.XME.GD.Ring)
+	
+	Process <id> used instead of process <tag> in the messages
+	evolved INI file 
+	  This->Injection
+	  Backup* segments
+	ListBackups implemented as vector
+	formMain->labelBackupScale
+	
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

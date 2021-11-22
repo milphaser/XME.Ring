@@ -1,0 +1,45 @@
+// you will need these headers, and you also need to link to Psapi.lib
+#include <tchar.h>
+#include <psapi.h>
+
+...
+// first get all the process so that we can get the process id 
+DWORD processes[1024], count;
+if( !EnumProcesses( processes, sizeof(processes), &count ) )
+{
+    return false;
+}
+
+count /= sizeof(DWORD);
+for(unsigned int i = 0; i < count; i++)
+{
+    TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
+    if(processes[i] != 0)
+    {
+        // remember to open with PROCESS_ALL_ACCESS, otherwise you will not be able to kill it
+        HANDLE hProcess = OpenProcess( PROCESS_ALL_ACCESS, FALSE, processes[i] );
+        if(NULL != hProcess)
+        {
+            HMODULE hMod;
+            DWORD cbNeeded;
+            if(EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
+            {
+                GetModuleBaseName(hProcess, hMod, szProcessName, sizeof(szProcessName)/sizeof(TCHAR));
+
+                // find the process and kill it
+                if(strcmp(szProcessName, "ShouldBeDead.exe") == 0)
+                {
+                    DWORD result = WAIT_OBJECT_0;
+                    while(result == WAIT_OBJECT_0)
+                    {
+                        // use WaitForSingleObject to make sure it's dead
+                        result = WaitForSingleObject(hProcess, 100);
+                        TerminateProcess(hProcess, 0);
+                    }
+
+                    CloseHandle(hProcess);
+                }
+            }
+        }
+    }     
+}
