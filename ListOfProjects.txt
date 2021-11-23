@@ -97,7 +97,7 @@ Description
 	Distributed Ring-based ME with Failure Recovery/Scheme 3
 	(Evolved Project 4.3.2.x.XME.GD.Ring)
 	
-	NOTE: No failures during injection are allowed.
+	NOTE: No failures during injection are tolerated!
 	
 	Process <id> used instead of process <tag> in the messages
 	evolved INI file 
@@ -105,6 +105,17 @@ Description
 	  Backup* segments
 	ListBackups implemented as vector
 	formMain->labelBackupScale
+	
+Status:	Completed
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4.5.4.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Project Name
+	4.5.4.x.XME.INJ.Ring
+Description
+	Distributed Ring-based ME with Failure Recovery/Scheme 3
+	(Evolved Project 4.4.3.x.XME.INJ.Ring)
+	
+	NOTE: Failures during injection are tolerated.
 	
 Status:	Completed
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
