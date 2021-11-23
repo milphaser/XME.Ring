@@ -139,8 +139,11 @@ public:
 
 	// INJ //////////////////////////////////////////////////////////////////
 	void __fastcall INJ_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
+	void __fastcall INJ_OnStart(TCustomWinSocket *Socket);
+	void __fastcall INJ_OnForward(String strMsg, TCustomWinSocket *Socket);
 
 	// RUP //////////////////////////////////////////////////////////////////
+	void __fastcall RUP_OnStart(TCustomWinSocket *Socket);
 	void __fastcall RUP_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
 
 	// E ////////////////////////////////////////////////////////////////////

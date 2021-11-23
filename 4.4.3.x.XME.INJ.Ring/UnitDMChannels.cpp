@@ -25,6 +25,7 @@ const String strMEStatus[] 	=
 __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 	: TDataModule(Owner)
 {
+	formMain->memoLog->Lines->Add(formMain->ëCaption);
 	ReadIniFile();	// read parameters from the configuration file
 
 	if(boolStep)
@@ -249,13 +250,7 @@ void __fastcall TdmChannels::csOutConnect(TObject *Sender, TCustomWinSocket *Soc
 	if(boolInjection)
 	{
 		// INJ::OnConnect
-		String strMsgOut = MSG_MRK_INJ + MSG_SEPARATOR + pidThis.id + MSG_SEPARATOR + ListPIds.front().id;
-		csOut->Socket->SendText(strMsgOut);
-
-		AddToLog(Socket, "<< " + strMsgOut + " [INJ::START]");
-
-		rupState = RUP_State::DOWN;
-		formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
+		INJ_OnStart(Socket);
 	}
 	else
 	{
@@ -264,19 +259,12 @@ void __fastcall TdmChannels::csOutConnect(TObject *Sender, TCustomWinSocket *Soc
 			// INJ::OnReceiptOf <mrk_inj, j, k>
 			// Last Phase after Reconnection to Injected process id <j>
 			// Forward  <mrk_inj, j, k> after Pi reconection from Pk to Pj
-			String strMsgOut = strInjMsg;
-			csOut->Socket->SendText(strMsgOut);
-			AddToLog(Socket, "<< " + strMsgOut);
+			INJ_OnForward(strInjMsg, Socket);
 			strInjMsg = "";
 		}
 
 		// RUP::OnConnect
-		rupState = RUP_State::DOWN;
-		formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
-		String strMsgOut = MSG_MRK_RUP + MSG_SEPARATOR + pidThis.id;
-		csOut->Socket->SendText(strMsgOut);
-		AddToLog(Socket, "<< " + strMsgOut + " [RUP::START]");
-		timerRUP->Enabled = true;
+		RUP_OnStart(Socket);
 	}
 }
 //---------------------------------------------------------------------------
@@ -535,6 +523,24 @@ TTime __fastcall TdmChannels::StrToTime(String strTime)
 	return timeResult;
 }
 //---------------------------------------------------------------------------
+void __fastcall TdmChannels::INJ_OnStart(TCustomWinSocket *Socket)
+{
+	String strMsgOut = MSG_MRK_INJ + MSG_SEPARATOR + pidThis.id + MSG_SEPARATOR + ListPIds.front().id;
+	csOut->Socket->SendText(strMsgOut);
+
+	AddToLog(Socket, "<< " + strMsgOut + " [INJ::START]");
+
+	rupState = RUP_State::DOWN;
+	formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
+}
+//---------------------------------------------------------------------------
+void __fastcall TdmChannels::INJ_OnForward(String strMsg, TCustomWinSocket *Socket)
+{
+	String strMsgOut = strMsg;
+	csOut->Socket->SendText(strMsgOut);
+	AddToLog(Socket, "<< " + strMsgOut);
+}
+//---------------------------------------------------------------------------
 void __fastcall TdmChannels::INJ_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket)
 {
 	// INJ::OnReceiptOf <mrk_inj, j, k>
@@ -672,20 +678,24 @@ void __fastcall TdmChannels::INJ_OnReceiptOfMarker(String strMsg, TCustomWinSock
 		else
 		{
 			// Forward  <mrk_inj, j, k>
-			String strMsgOut = strMsg;
-			csOut->Socket->SendText(strMsgOut);
-			AddToLog(Socket, "<< " + strMsgOut);
+			INJ_OnForward(strMsg, Socket);
 
-			// RUP::OnConnect
-			rupState = RUP_State::DOWN;
-			formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
-			strMsgOut = MSG_MRK_RUP + MSG_SEPARATOR + pidThis.id;
-			csOut->Socket->SendText(strMsgOut);
-			AddToLog(Socket, "<< " + strMsgOut + " [RUP::START]");
-			timerRUP->Enabled = true;
+			// RUP::OnStart
+			RUP_OnStart(Socket);
 		}
 		//..................................................................
 	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TdmChannels::RUP_OnStart(TCustomWinSocket *Socket)
+{
+	// RUP::OnStart
+	rupState = RUP_State::DOWN;
+	formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
+	String strMsgOut = MSG_MRK_RUP + MSG_SEPARATOR + pidThis.id;
+	csOut->Socket->SendText(strMsgOut);
+	AddToLog(Socket, "<< " + strMsgOut + " [RUP::START]");
+	timerRUP->Enabled = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TdmChannels::RUP_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket)
