@@ -100,13 +100,15 @@ void __fastcall TdmChannels::ReadIniFile(void)
 	boolStep	 = iniFile->ReadBool(L"Token", L"Step", 0);
 
 	/////////////////////////////////////////////////////////////////////////
-	boolInjection = iniFile->ReadBool(L"This", L"Injection", false);
+	bool boolInjection = iniFile->ReadBool(L"This", L"Injection", false);
 	if(boolInjection)
 	{
+		injState = INJ_State::ON;
 		formMain->labelInjection->Show();
 	}
 	else
 	{
+		injState = INJ_State::OFF;
 		formMain->labelInjection->Hide();
 	}
 
@@ -248,7 +250,7 @@ void __fastcall TdmChannels::csOutConnect(TObject *Sender, TCustomWinSocket *Soc
 	String str = "Output channel connected to " +  csOut->Address;
 	formMain->stbarOutStatus->SimpleText = str;
 
-	if(boolInjection)
+	if(injState == INJ_State::ON)
 	{
 		// INJ::OnConnect
 		INJ_OnStart(Socket);
@@ -609,7 +611,7 @@ void __fastcall TdmChannels::INJ_OnReceiptOfMarker(String strMsg, TCustomWinSock
 	if(pidThis.id == intPar1)
 	{
 		// i == j
-		boolInjection = false;
+		injState = INJ_State::OFF;
 		formMain->labelInjection->Hide();
 
 		timerINJ->Enabled = false;

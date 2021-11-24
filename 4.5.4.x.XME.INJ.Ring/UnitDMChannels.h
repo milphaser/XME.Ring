@@ -28,11 +28,11 @@ const int MAX_INJ_PERIOD	= 3000;		// period to next INJ check, ms
 const String MSG_LEADER		= "|";
 const String MSG_SEPARATOR	= " ";
 
-// INJ
-const String MSG_MRK_INJ	= MSG_LEADER + "MRK_INJ";
-
 // RUP
 const String MSG_MRK_RUP	= MSG_LEADER + "MRK_RUP";
+
+// INJ
+const String MSG_MRK_INJ	= MSG_LEADER + "MRK_INJ";
 
 // E
 const String MSG_ELECTION	= MSG_LEADER + "MRK_ELECTION";
@@ -52,6 +52,9 @@ enum class CEH_State {INIT = 0, CLOSED, OPENED, FAULTY};
 
 // RUP
 enum class RUP_State {INIT = 0, DOWN, UP};
+
+// INJ
+enum class INJ_State {ON, OFF};
 
 // E
 enum class E_State {NONPARTICIPANT = 0, PARTICIPANT};
@@ -146,9 +149,9 @@ public:
 	void __fastcall RUP_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
 
 	// INJ //////////////////////////////////////////////////////////////////
-	void __fastcall INJ_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
 	void __fastcall INJ_OnStart(TCustomWinSocket *Socket);
 	void __fastcall INJ_OnForward(String strMsg, TCustomWinSocket *Socket);
+	void __fastcall INJ_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
 
 	// E ////////////////////////////////////////////////////////////////////
 	void __fastcall E_OnStart(void);
@@ -179,6 +182,9 @@ private:
 	int intErrorCounter;			// CEH Error Counter
 	RUP_State rupState;				// Ring Up Check (RUP) State
 	//
+	INJ_State injState;	            // Injection (INJ) State
+	String strInjMsg;				// Injection message to forward
+	//
 	E_State eState;					// Election (E) State
 	//
 	bool boolMrkME;                 // This Process MrkME State
@@ -190,11 +196,6 @@ private:
 	String strElectedPId;			// Coordinator Id
 	std::deque<PID<int>> ListPIds;	// List of System Processes as a chain
 	std::vector<PID<int>> ListBackups;  // Vector of Backup Processes
-	//
-	bool boolInjection;	            // Injection Request flag
-									//   <false> if conventional startup
-									//   <true> if injections
-	String strInjMsg;				// Injection message to forward
 	//
 	int intDelay;					// Delay for ME Token visualization, ms
 	bool boolStep;                  // Trace Mode for ME Token progress by step
