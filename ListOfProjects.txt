@@ -34,6 +34,7 @@ Each project has one of the next type of status:
 	Under development
 	Uncompleted
 	Completed
+	Final
 *********************************************************************************
 1.0.4.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Project Name
@@ -76,7 +77,7 @@ Description
 	AutoList := false
 	ListPIds implemented as FIFO queue
 	
-Status:	Completed
+Status:	Final
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 4.3.2.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Project Name
@@ -88,7 +89,7 @@ Description
 	formMain->labelCurrentScale
 	formMain->stNext
 
-Status:	Completed
+Status:	Final
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 4.4.3.x +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Project Name
