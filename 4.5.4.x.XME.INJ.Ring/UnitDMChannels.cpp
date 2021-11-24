@@ -520,6 +520,7 @@ TTime __fastcall TdmChannels::StrToTime(String strTime)
 
 	return timeResult;
 }
+//---------------------------------------------------------------------------
 void __fastcall TdmChannels::RUP_OnStart(TCustomWinSocket *Socket)
 {
 	// RUP::OnStart

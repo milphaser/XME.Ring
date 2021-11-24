@@ -54,7 +54,7 @@ enum class CEH_State {INIT = 0, CLOSED, OPENED, FAULTY};
 enum class RUP_State {INIT = 0, DOWN, UP};
 
 // INJ
-enum class INJ_State {ON, OFF};
+enum class INJ_State {OFF, ON};
 
 // E
 enum class E_State {NONPARTICIPANT = 0, PARTICIPANT};
