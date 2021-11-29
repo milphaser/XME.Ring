@@ -16,19 +16,19 @@
     <Transaction>1899.12.30 00:00:00.000.731,C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\UnitDMChannels.h=C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\Unit1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.705,C:\My_COURSES\DS.CD\CBuilder\Test6.3.RingBasedME+Election_FSM_AUTO_AUTO\XE3\RELEASE\RingBasedME.cbproj=C:\Users\Milen\Documents\RAD Studio\Projects\Project1.cbproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.940,C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\RingBasedMEPCH1.h=</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.275,=C:\Users\Milen\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.636,=C:\Users\Milen\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.149,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.016,=C:\Users\Milen\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.149,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.275,=C:\Users\Milen\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.196,=C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.582,C:\My_COURSES\DS.CD\CBuilder\Test6.3.RingBasedME+Election_FSM_AUTO_AUTO\XE3\RELEASE\UnitFormSockets.cpp=C:\Users\Milen\Documents\RAD Studio\Projects\Unit2.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.582,C:\My_COURSES\DS.CD\CBuilder\Test6.3.RingBasedME+Election_FSM_AUTO_AUTO\XE3\RELEASE\UnitFormSockets.h=C:\Users\Milen\Documents\RAD Studio\Projects\Unit2.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.721,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.374,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.524,C:\My_COURSES\DS.CD\CBuilder\Test6.3.RingBasedME+Election_FSM_AUTO_AUTO\XE3\RELEASE\RingBasedMEPCH1.h=C:\Users\Milen\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.435,C:\My_COURSES\DS.CD\CBuilder\Test6.3.RingBasedME+Election_FSM_AUTO_AUTO\XE3\RELEASE\UnitFormMain.h=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.731,C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\UnitDMChannels.cpp=C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.731,C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\UnitDMChannels.dfm=C:\DIPLOM.PRJ\FN133732.DS.DA\SRC\4.1.ME_E.Ring\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.374,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.721,=C:\Users\Milen\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.229,C:\DIPLOM.PRJ\FN173716.DS.RBA\SRC\1.1.BME.Ring\BME_Ring.cbproj=C:\DIPLOM.PRJ\FN173716.DS.RBA\SRC\1.1.BME.Ring\ME_Ring.cbproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.416,C:\My_CONFERENCES\__CONFERENCES__\RU\РУ2021\SRC\4.1.1.x.XME.GD.Ring\XME.GD_Ring.cbproj=C:\My_CONFERENCES\__CONFERENCES__\RU\РУ2021\SRC\4.1.1.x.XME.GD.Ring\XME_Ring.cbproj</Transaction>
   </Transactions>

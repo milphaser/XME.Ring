@@ -54,10 +54,13 @@ enum class CEH_State {INIT = 0, CLOSED, OPENED, FAULTY};
 enum class RUP_State {INIT = 0, DOWN, UP};
 
 // INJ
-enum class INJ_State {OFF, ON};
+enum class INJ_State {OFF = 0, ON};
 
 // E
 enum class E_State {NONPARTICIPANT = 0, PARTICIPANT};
+
+// MrkME
+enum class MrkME_State {OFF= 0, ON};
 
 // ME
 enum class ME_State {INIT = 0, RELEASED, WANTED, HELD};
@@ -160,9 +163,9 @@ public:
 
 	// MrkME ////////////////////////////////////////////////////////////////
 	void __fastcall MrkME_OnAfterElection(void);
-	void __fastcall MrkME_OnReceiptOfClear(String strMsg);
+	void __fastcall MrkME_OnReceiptOfClear(void);
 	void __fastcall MrkME_OnClear(void);
-	void __fastcall MrkME_OnReceiptOfMarker(String strMsg);
+	void __fastcall MrkME_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket);
 
 	// ME ///////////////////////////////////////////////////////////////////
 	void __fastcall ME_OnAfterElection(void);
@@ -187,9 +190,9 @@ private:
 	//
 	E_State eState;					// Election (E) State
 	//
-	bool boolMrkME;                 // This Process MrkME State
+	MrkME_State mrkState;			// MrkME State
 	TTime timeMrkME;                // Token ME Id
-	String strClrPending;        	// Hold <mrk_me_clr> Message
+	String strClrPending;        	// Retained Token <mrk_me_clr>
 	ME_State meState;				// Mutual Exclusion (ME) State
 	//
 	PID<int> pidThis;				// This Process Id, i

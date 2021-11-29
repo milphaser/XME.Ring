@@ -61,8 +61,8 @@ Description
 	Distributed Ring-based ME with Failure Recovery/Scheme 1
 	(Refactored Project 4.1.1.x.XME.GD.Ring)
 
-	class PID
-	evolved INI file (Next* segment)
+	>>> class PID introduced
+	>>> INI file (Next* segment) evolved 
 	
 Status:	Completed
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -98,14 +98,13 @@ Description
 	Distributed Ring-based ME with Failure Recovery/Scheme 3
 	(Evolved Project 4.3.2.x.XME.GD.Ring)
 	
-	NOTE: No failures during injection are tolerated!
-	
-	Process <id> used instead of process <tag> in the messages
-	evolved INI file 
+	>>> NOTE: No failures during injection are tolerated!
+	>>> Process <id> used instead of process <tag> in the messages
+	>>> evolved INI file 
 	  This->Injection
 	  Backup* segments
-	ListBackups implemented as vector
-	formMain->labelBackupScale
+	>>> ListBackups implemented as vector
+	>>> formMain->labelBackupScale
 	
 Status:	Completed
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -116,7 +115,20 @@ Description
 	Distributed Ring-based ME with Failure Recovery/Scheme 3
 	(Evolved Project 4.4.3.x.XME.INJ.Ring)
 	
-	NOTE: Failures during injection are tolerated.
+	>>> Failures during injection are tolerated.
+	>>> MrkME Implementation Refactored
+	>>> Mx1ME::OnRelease Event Correction
+	Situation overcomed: if some process get faulty when Coordinator	is in the section
+	OnRelease:
+	  If state = HELD
+	    state := RELEASED
+	    If MrkME::strClrPending != NULL
+	      MrkME::OnClear()
+	      MrkME::strClrPending := NULL
+	    Else
+	      Send <mrk_me, Tj>
+	    End If
+	  End If
 	
 Status:	Completed
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

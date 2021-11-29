@@ -25,7 +25,7 @@ const String strMEStatus[] 	=
 __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 	: TDataModule(Owner)
 {
-	formMain->memoLog->Lines->Add(formMain->ëCaption);
+	formMain->memoLog->Lines->Add(formMain->Caption);
 	ReadIniFile();	// read parameters from the configuration file
 
 	if(boolStep)

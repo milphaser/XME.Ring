@@ -67,8 +67,8 @@ __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 
 	// MrkME //////////////////////////////////////////////////////////////////
 	// MrkME::OnInit
-	boolMrkME = false;
-	formMain->panelMrkME->Color = clMrkMEStatus[boolMrkME];
+	mrkState = MrkME_State::OFF;
+	formMain->panelMrkME->Color = clMrkMEStatus[static_cast<int>(mrkState)];
 	strClrPending = "";
 	SetTimeMrkME();
 
@@ -415,16 +415,16 @@ void __fastcall TdmChannels::OnReceiptOfMsg(String strMsg, TCustomWinSocket *Soc
 	}
 	else if(strMsg.Pos(MSG_MRK_ME_CLR) == 1)
 	{  // MrkME::OnReceiptOf <mrk_me_clr>
-		MrkME_OnReceiptOfClear(strMsg);
+		MrkME_OnReceiptOfClear();
 	}
 	else if(strMsg.Pos(MSG_MRK_ME_MRK) == 1)
-	{
-		if(boolMrkME)
-		{  // MrkME::OnReceiptOf <mrk_me, Tj>
-			MrkME_OnReceiptOfMarker(strMsg);
+	{   // MrkME::OnReceiptOf <mrk_me, Tj>
+		if(mrkState == MrkME_State::ON)
+		{   // MrkME_State::ON
+			MrkME_OnReceiptOfMarker(strMsg, Socket);
 		}
-		else if(strMsg.Pos(MSG_MRK_ME_MRK) == 1)
-		{  // ME Marker Message Received
+		else
+		{  // MrkME_State::OFF
 			ME_OnReceiptOfMarker(strMsg);
 		}
 	}
@@ -545,7 +545,7 @@ void __fastcall TdmChannels::RUP_OnReceiptOfMarker(String strMsg, TCustomWinSock
 		timerRUP->Enabled = false;
 		rupState = RUP_State::UP;
 		formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
-		AddToLog("RUP::UP");
+		AddToLog("[RUP::UP]");
 
 		// E /////////////////////////////////////////////////////////////////////
 		// E::OnStartElection
@@ -618,7 +618,7 @@ void __fastcall TdmChannels::INJ_OnReceiptOfMarker(String strMsg, TCustomWinSock
 		timerINJ->Enabled = false;
 		rupState = RUP_State::UP;
 		formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
-		AddToLog("INJ::END [RUP::UP]");
+		AddToLog("[INJ::END][RUP::UP]");
 
 		// E /////////////////////////////////////////////////////////////////////
 		// E::OnStartElection
@@ -822,7 +822,7 @@ void __fastcall TdmChannels::E_OnReceiptOfElected(String strMsg, TCustomWinSocke
 	}
 	else
 	{   // j = i
-		AddToLog(csOut->Socket, "E::END");
+		AddToLog("[E::END]");
 
 		// ME /////////////////////////////////////////////////////////////////////
 		// ME::OnInit - after election
@@ -836,8 +836,8 @@ void __fastcall TdmChannels::MrkME_OnAfterElection(void)
 	// MrkME::OnAfterElection
 	if(strElectedPId == pidThis.id)
 	{
-		boolMrkME = true;
-		formMain->panelMrkME->Color = clMrkMEStatus[boolMrkME];
+		mrkState = MrkME_State::ON;
+		formMain->panelMrkME->Color = clMrkMEStatus[static_cast<int>(mrkState)];
 
 		SetTimeMrkME();
 
@@ -848,19 +848,18 @@ void __fastcall TdmChannels::MrkME_OnAfterElection(void)
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TdmChannels::MrkME_OnReceiptOfClear(String strMsg)
+void __fastcall TdmChannels::MrkME_OnReceiptOfClear(void)
 {
 	// MrkME::OnReceiptOf <mrk_me_clr>
 	if(meState != ME_State::HELD)
 	{
-		strClrPending = strMsg;
 		MrkME_OnClear();
 		strClrPending = "";
 	}
 	else
 	{
-		strClrPending = strMsg;
-		AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::PENDING]");
+		strClrPending = MSG_MRK_ME_CLR;
+		AddToLog("[MrkME::CLR PENDING]");
 	}
 }
 //---------------------------------------------------------------------------
@@ -869,7 +868,7 @@ void __fastcall TdmChannels::MrkME_OnClear(void)
 	// MrkME::OnClear
 	if(strElectedPId == pidThis.id)
 	{
-		AddToLog(csOut->Socket, "<< " + strClrPending + " [MrkME::PASS1 END]");
+		AddToLog("[MrkME::PASS1 END]");
 
 		SetTimeMrkME(Time());
 
@@ -880,18 +879,18 @@ void __fastcall TdmChannels::MrkME_OnClear(void)
 	}
 	else
 	{
-		boolMrkME = true;
-		formMain->panelMrkME->Color = clMrkMEStatus[boolMrkME];
+		mrkState = MrkME_State::ON;
+		formMain->panelMrkME->Color = clMrkMEStatus[static_cast<int>(mrkState)];
 		SetTimeMrkME();
 
-		String strMsgOut = strClrPending;
+		String strMsgOut = MSG_MRK_ME_CLR;
 		csOut->Socket->SendText(strMsgOut);
 
 		AddToLog(csOut->Socket, "<< " + strMsgOut + " [MrkME::LOCAL START]");
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TdmChannels::MrkME_OnReceiptOfMarker(String strMsg)
+void __fastcall TdmChannels::MrkME_OnReceiptOfMarker(String strMsg, TCustomWinSocket *Socket)
 {
 	// MrkME::OnReceiptOf <mrk_me, Tj>
 	if(strElectedPId == pidThis.id)
@@ -900,19 +899,17 @@ void __fastcall TdmChannels::MrkME_OnReceiptOfMarker(String strMsg)
 		String strTimeMrkME = FormatDateTime("hh:mm:ss.zzz", timeMrkME);
 		if(strTimeMrkME == strTj)
 		{
-			if(boolMrkME)
-			{
-				boolMrkME = false;
-				formMain->panelMrkME->Color = clMrkMEStatus[boolMrkME];
+			AddToLog(Socket, ">> " + strMsg);
 
-				AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::END]");
-			}
+			mrkState = MrkME_State::OFF;
+			formMain->panelMrkME->Color = clMrkMEStatus[static_cast<int>(mrkState)];
+			AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::END]");
 
 			SendMarkerME(strMsg);
 		}
 		else
 		{   // Diagnostic log record
-			AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::OLD MARKER ABSORBED]");
+			AddToLog(csOut->Socket, ">> " + strMsg + " [MrkME::OLD MARKER ABSORBED]");
 		}
 	}
 	else
@@ -920,27 +917,32 @@ void __fastcall TdmChannels::MrkME_OnReceiptOfMarker(String strMsg)
 		String strTj = strMsg.c_str() + MSG_MRK_ME_MRK.Length() + MSG_SEPARATOR.Length();
 		String strTimeMrkME = FormatDateTime("hh:mm:ss.zzz", timeMrkME);
 
-		TTime t0;
-		if(timeMrkME == t0)
+		if(!IsTimeMrkMENotNull())
 		{
-			boolMrkME = false;
-			formMain->panelMrkME->Color = clMrkMEStatus[boolMrkME];
+			AddToLog(Socket, ">> " + strMsg);
+
+			mrkState = MrkME_State::OFF;
+
 			SetTimeMrkME(StrToTime(strTj));
-
-			AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::LOCAL END]");
-
 			SendMarkerME(strMsg);
+
+			formMain->panelMrkME->Color = clMrkMEStatus[static_cast<int>(mrkState)];
+			AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::LOCAL END]");
 		}
 		else
 		{
 			if(strTimeMrkME == strTj)
 			{
+				AddToLog(Socket, ">> " + strMsg);
+
 				String strMsgOut = strMsg;
 				csOut->Socket->SendText(strMsgOut);
+
+				AddToLog(csOut->Socket, "<< " + strMsgOut);
 			}
 			else
 			{   // Diagnostic log record
-				AddToLog(csOut->Socket, "<< " + strMsg + " [MrkME::ANCIENT MARKER ABSORBED]");
+				AddToLog(csOut->Socket, ">> " + strMsg + " [MrkME::ANCIENT MARKER ABSORBED]");
 			}
 		}
 	}
@@ -1009,14 +1011,16 @@ void __fastcall TdmChannels::ME_OnRelease(void)
 		formMain->buttonEnter->Enabled = true;
 		formMain->buttonRelease->Enabled = false;
 
-		String strMsgOut = MSG_MRK_ME_MRK + MSG_SEPARATOR + FormatDateTime("hh:mm:ss.zzz", timeMrkME);
-		SendMarkerME(strMsgOut);
-
 		if(!strClrPending.IsEmpty())
 		{
 			// working out of the hold <mrk_me_clr> message
 			MrkME_OnClear();
 			strClrPending = "";
+		}
+		else
+		{
+			String strMsgOut = MSG_MRK_ME_MRK + MSG_SEPARATOR + FormatDateTime("hh:mm:ss.zzz", timeMrkME);
+			SendMarkerME(strMsgOut);
 		}
 	}
 }
