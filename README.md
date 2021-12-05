@@ -2,6 +2,7 @@
 
  Article: Distributed Ring-based Mutual Exclusion with Failure Recovery
  https://dl.acm.org/citation.cfm?doid=3407982.3408014
+
  Article: Distributed Ring-based Mutual Exclusion with Graceful Degradation
  https://www.researchgate.net/publication/356786353_Distributed_Ring-based_Mutual_Exclusion_with_Graceful_Degradation
 
