@@ -15,12 +15,11 @@
 //
 const String PID_NULL		= "NULL";	// undefined PId
 
-const int MAX_CEH_PERIOD 	= 3000;		// period between connection attempts, ms
-const int MAX_CEH_ERR		= 5;		// maximum connection attempts
 const int MIN_K				= 1;		// min number of faultless processes (max degradation)
+const int MAX_CEH_PERIOD 	= 3000;		// period between reconnection attempts, ms
+const int MAX_CEH_ERR		= 5;		// maximum connection attempts
 
 const int MAX_RUP_PERIOD	= 3000;		// period to next RUP check, ms
-
 const int MAX_INJ_PERIOD	= 3000;		// period to next INJ check, ms
 //---------------------------------------------------------------------------
 //	MESSAGES
@@ -67,6 +66,7 @@ enum class ME_State {INIT = 0, RELEASED, WANTED, HELD};
 //---------------------------------------------------------------------------
 //	UTILITIES
 //
+int intLogFirstLine = 0;
 void __fastcall AddToLog(String str);
 void __fastcall AddToLog(TCustomWinSocket* sock, String str);
 //---------------------------------------------------------------------------
@@ -203,6 +203,14 @@ private:
 	int intDelay;					// Delay for ME Token visualization, ms
 	bool boolStep;                  // Trace Mode for ME Token progress by step
 	String strMarkerTrace;			// Bufer for ME Token in Trace Mode
+	//
+	// Constants ////////////////////////////////////////////////////////////
+	int intMIN_K;					// min number of faultless processes (max degradation)
+	int intMAX_CEH_PERIOD;			// period between reconnection attempts, ms
+	int intMAX_CEH_ERR;				// maximum connection attempts
+	//
+	int intMAX_RUP_PERIOD;			// period to next RUP check, ms
+	int intMAX_INJ_PERIOD;			// period to next INJ check, ms
 	/////////////////////////////////////////////////////////////////////////
 
 	void __fastcall OnReceiptOfMsg(String strMsg, TCustomWinSocket *Socket);

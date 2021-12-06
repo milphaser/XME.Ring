@@ -115,6 +115,9 @@ Description
 	Distributed Ring-based ME with Failure Recovery/Scheme 3
 	(Evolved Project 4.4.3.x.XME.INJ.Ring)
 	
+	>>> evolved INI file
+	  Constants
+	>>> Log header
 	>>> Failures during injection are tolerated.
 	>>> MrkME Implementation Refactored
 	>>> Mx1ME::OnRelease Event Correction

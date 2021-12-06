@@ -25,8 +25,26 @@ const String strMEStatus[] 	=
 __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 	: TDataModule(Owner)
 {
-	formMain->memoLog->Lines->Add(formMain->Caption);
 	ReadIniFile();	// read parameters from the configuration file
+
+	formMain->memoLog->Lines->Add("===========================================================");
+	formMain->memoLog->Lines->Add(formMain->Caption);
+	formMain->memoLog->Lines->Add("===========================================================");
+	formMain->memoLog->Lines->Add("MIN_K: " + IntToStr(intMIN_K));
+	formMain->memoLog->Lines->Add("MAX_CEH_PERIOD: " + IntToStr(intMAX_CEH_PERIOD) + ", ms");
+	formMain->memoLog->Lines->Add("MAX_CEH_ERR: " + IntToStr(intMAX_CEH_ERR));
+	formMain->memoLog->Lines->Add("MAX_RUP_PERIOD: " + IntToStr(intMAX_RUP_PERIOD) + ", ms");
+	formMain->memoLog->Lines->Add("MAX_INJ_PERIOD: " + IntToStr(intMAX_INJ_PERIOD) + ", ms");
+	formMain->memoLog->Lines->Add("===========================================================");
+	String strListPIds = "ListPIds:";
+	for(auto& x : ListPIds)
+	{
+		strListPIds += " " + IntToStr(x.id);
+	}
+	formMain->memoLog->Lines->Add(strListPIds);
+	formMain->memoLog->Lines->Add("===========================================================");
+
+	intLogFirstLine = formMain->memoLog->Lines->Count;
 
 	if(boolStep)
 	{   // step movement of ME token
@@ -46,18 +64,18 @@ __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 	intErrorCounter = 0;
 	cehState = CEH_State::INIT;
 	formMain->panelOutput->Color = clCEHStatus[static_cast<int>(cehState)];
-	timerCEH->Interval = MAX_CEH_PERIOD;
+	timerCEH->Interval = intMAX_CEH_PERIOD;
 
 	// RUP ////////////////////////////////////////////////////////////////////
 	// RUP::OnInit
 	rupState = RUP_State::INIT;
 	formMain->panelRingUp->Color = clRUPStatus[static_cast<int>(rupState)];
-	timerRUP->Interval = MAX_RUP_PERIOD;
+	timerRUP->Interval = intMAX_RUP_PERIOD;
 
 	// INJ ////////////////////////////////////////////////////////////////////
 	// INJ::OnInit
 	strInjMsg = "";
-	timerINJ->Interval = MAX_INJ_PERIOD;
+	timerINJ->Interval = intMAX_INJ_PERIOD;
 
 	// E //////////////////////////////////////////////////////////////////////
 	// E::OnInit
@@ -98,6 +116,12 @@ void __fastcall TdmChannels::ReadIniFile(void)
 
 	intDelay	 = iniFile->ReadInteger(L"Token", L"Delay", 0);
 	boolStep	 = iniFile->ReadBool(L"Token", L"Step", 0);
+
+	intMIN_K           = iniFile->ReadInteger(L"Constants", L"MIN_K", MIN_K);
+	intMAX_CEH_PERIOD  = iniFile->ReadInteger(L"Constants", L"MAX_CEH_PERIOD", MAX_CEH_PERIOD);
+	intMAX_CEH_ERR     = iniFile->ReadInteger(L"Constants", L"MAX_CEH_ERR", MAX_CEH_ERR);
+	intMAX_RUP_PERIOD  = iniFile->ReadInteger(L"Constants", L"MAX_RUP_PERIOD", MAX_RUP_PERIOD);
+	intMAX_INJ_PERIOD  = iniFile->ReadInteger(L"Constants", L"MAX_INJ_PERIOD", MAX_INJ_PERIOD);
 
 	/////////////////////////////////////////////////////////////////////////
 	bool boolInjection = iniFile->ReadBool(L"This", L"Injection", false);
@@ -172,13 +196,6 @@ void __fastcall TdmChannels::ReadIniFile(void)
 		ListBackups.push_back(pidItem);
 	}
 
-	// Diagnostic print of ListPIds
-	String strListPIds = "ListPIds:";
-	for(auto& x : ListPIds)
-	{
-		strListPIds += " " + IntToStr(x.id);
-	}
-	AddToLog(strListPIds);
 	formMain->labelCurrentScale->Caption = ListPIds.size();
 	formMain->labelBackupScale->Caption = ListBackups.size();
 }
@@ -299,9 +316,9 @@ void __fastcall TdmChannels::csOutError(TObject *Sender, TCustomWinSocket *Socke
 	formMain->panelOutput->Color = clCEHStatus[static_cast<int>(cehState)];
 
 	String str;
-	if(++intErrorCounter >= MAX_CEH_ERR)
+	if(++intErrorCounter >= intMAX_CEH_ERR)
 	{
-		if(ListPIds.size() >= MIN_K)
+		if(ListPIds.size() >= intMIN_K)
 		{
 			// Remove faulty neighbor
 			ListPIds.pop_front();
@@ -1028,7 +1045,7 @@ void __fastcall TdmChannels::ME_OnRelease(void)
 void __fastcall AddToLog(String str)
 {
 	String strNum;
-	strNum.printf(L"%04d", formMain->memoLog->Lines->Count + 1);
+	strNum.printf(L"%06d", formMain->memoLog->Lines->Count - intLogFirstLine + 1);
 	String ws = FormatDateTime("hh:mm:ss.zzz", Time()) + " " + str;
 	formMain->memoLog->Lines->Add(strNum + " " + ws);
 }
@@ -1036,7 +1053,7 @@ void __fastcall AddToLog(String str)
 void __fastcall AddToLog(TCustomWinSocket* sock, String str)
 {
 	String strNum;
-	strNum.printf(L"%04d", formMain->memoLog->Lines->Count + 1);
+	strNum.printf(L"%06d", formMain->memoLog->Lines->Count - intLogFirstLine + 1);
 	String ws = FormatDateTime("hh:mm:ss.zzz", Time()) +
 				" [" + sock->RemoteHost + "::" + sock->RemoteAddress + "] " +
 				str;
