@@ -27,21 +27,30 @@ __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 {
 	ReadIniFile();	// read parameters from the configuration file
 
+	// Log Heading
 	formMain->memoLog->Lines->Add("===========================================================");
 	formMain->memoLog->Lines->Add(formMain->Caption);
 	formMain->memoLog->Lines->Add("===========================================================");
-	formMain->memoLog->Lines->Add("MIN_K: " + IntToStr(intMIN_K));
+	formMain->memoLog->Lines->Add("MIN_K:          " + IntToStr(intMIN_K));
 	formMain->memoLog->Lines->Add("MAX_CEH_PERIOD: " + IntToStr(intMAX_CEH_PERIOD) + ", ms");
-	formMain->memoLog->Lines->Add("MAX_CEH_ERR: " + IntToStr(intMAX_CEH_ERR));
+	formMain->memoLog->Lines->Add("MAX_CEH_ERR:    " + IntToStr(intMAX_CEH_ERR));
 	formMain->memoLog->Lines->Add("MAX_RUP_PERIOD: " + IntToStr(intMAX_RUP_PERIOD) + ", ms");
 	formMain->memoLog->Lines->Add("MAX_INJ_PERIOD: " + IntToStr(intMAX_INJ_PERIOD) + ", ms");
 	formMain->memoLog->Lines->Add("===========================================================");
+
 	String strListPIds = "ListPIds:";
 	for(auto& x : ListPIds)
 	{
 		strListPIds += " " + IntToStr(x.id);
 	}
 	formMain->memoLog->Lines->Add(strListPIds);
+
+	String strBackups = "Backups: ";
+	for(auto& x : ListBackups)
+	{
+		strBackups += " " + IntToStr(x.id);
+	}
+	formMain->memoLog->Lines->Add(strBackups);
 	formMain->memoLog->Lines->Add("===========================================================");
 
 	intLogFirstLine = formMain->memoLog->Lines->Count;
