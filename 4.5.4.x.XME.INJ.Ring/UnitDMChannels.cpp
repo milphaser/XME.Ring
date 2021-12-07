@@ -105,6 +105,8 @@ __fastcall TdmChannels::TdmChannels(TComponent* Owner)
 	formMain->stStatus->Caption = strMEStatus[static_cast<int>(meState)];
 	formMain->buttonEnter->Enabled = false;
 	formMain->buttonRelease->Enabled = false;
+
+    AddToLog("[START]");
 }
 //---------------------------------------------------------------------------
 void __fastcall TdmChannels::ReadIniFile(void)
